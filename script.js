@@ -1,7 +1,7 @@
-//your JS code here. If required.
 let player1;
 let player2;
 let currentPlayer = 1;
+let gameOver = false;
 
 let board = ["", "", "", "", "", "", "", "", ""];
 
@@ -23,9 +23,14 @@ document.getElementById("submit").addEventListener("click", function () {
 document.querySelectorAll(".cell").forEach(function (cell) {
     cell.addEventListener("click", function () {
 
+        // Stop the game after someone wins
+        if (gameOver) {
+            return;
+        }
+
         let id = parseInt(cell.id);
 
-        // Don't allow already filled cells
+        // Don't allow an already filled cell
         if (board[id] !== "") {
             return;
         }
@@ -38,16 +43,18 @@ document.querySelectorAll(".cell").forEach(function (cell) {
             cell.textContent = "o";
         }
 
+        // Check winner
         if (checkWinner()) {
             let winner = currentPlayer === 1 ? player1 : player2;
 
             document.querySelector(".message").textContent =
                 winner + ", congratulations you won!";
 
+            gameOver = true; // IMPORTANT
             return;
         }
 
-        // Change player
+        // Switch player
         if (currentPlayer === 1) {
             currentPlayer = 2;
             document.querySelector(".message").textContent =
@@ -59,7 +66,6 @@ document.querySelectorAll(".cell").forEach(function (cell) {
         }
     });
 });
-
 
 function checkWinner() {
     let winningCombinations = [
